@@ -5,7 +5,7 @@ using UnityEngine;
 public class CollectableSpawner : MonoBehaviour
 {
     public static CollectableSpawner Instance;
-    
+
     [SerializeField] private GameObject collectablePrefab;
     [SerializeField] private Transform collectableParent;
     public List<GameObject> foodList = new();
@@ -43,7 +43,7 @@ public class CollectableSpawner : MonoBehaviour
         var spawnPosition = new Vector3(Random.Range(-15, 16), 1.5f, Random.Range(-5.25f, 21.5f));
         var cloneSpawn = Instantiate(collectablePrefab, spawnPosition, Quaternion.identity, transform);
         cloneSpawn.transform.localScale = Vector3.zero;
-        cloneSpawn.transform.DOScale(new Vector3(0.3f,0.3f,0.3f),0.25f);
+        cloneSpawn.transform.DOScale(new Vector3(0.3f, 0.3f, 0.3f), 0.25f);
         foodList.Add(cloneSpawn);
     }
 }

@@ -5,12 +5,12 @@ using UnityEngine.AI;
 
 public class PlayerCollision : MonoBehaviour
 {
+    private static readonly int IsRunning = Animator.StringToHash("isRunning");
     [SerializeField] private float scaleMultiplier;
     [SerializeField] private int playerLevel;
     [SerializeField] private float pushForce = 5;
     private PlayerMovement playerMoveScript;
     private Rigidbody playerRb;
-    private static readonly int IsRunning = Animator.StringToHash("isRunning");
 
     private void Start()
     {
@@ -24,11 +24,12 @@ public class PlayerCollision : MonoBehaviour
         EnemyCollision(collision);
         GroundCheck(collision);
     }
+
     private void OnCollisionExit(Collision other)
     {
         GroundExitColl(other);
     }
-    
+
     private void OnTriggerEnter(Collider other)
     {
         FoodCollision(other);
@@ -52,20 +53,22 @@ public class PlayerCollision : MonoBehaviour
             playerMoveScript.canMove = false;
             collision.gameObject.GetComponent<NavMeshAgent>().enabled = false;
             StartCoroutine(EnemyNavmeshActivate(collision.gameObject));
-            
+
             playerRb.AddForce(-transform.forward * pushForce / 4, ForceMode.Impulse); // OurRigidbody Force
-            Invoke(nameof(CanMoveAfterForce), pushForce / 130);                  // Wait for pushComplete after player can move
-            
-            var otherRb =collision.gameObject.GetComponent<Rigidbody>();            // This part could also be written using DoTween, which would likely have better control and performance.
-            otherRb.AddForce(transform.forward * pushForce, ForceMode.Impulse);    //  I used physics for prototyping purposes.
+            Invoke(nameof(CanMoveAfterForce), pushForce / 130); // Wait for pushComplete after player can move
+
+            var otherRb =
+                collision.gameObject
+                    .GetComponent<Rigidbody>(); // This part could also be written using DoTween, which would likely have better control and performance.
+            otherRb.AddForce(transform.forward * pushForce,
+                ForceMode.Impulse); //  I used physics for prototyping purposes.
         }
     }
 
-    IEnumerator EnemyNavmeshActivate(GameObject enemy)
+    private IEnumerator EnemyNavmeshActivate(GameObject enemy)
     {
         yield return new WaitForSeconds(.2f);
         enemy.GetComponent<NavMeshAgent>().enabled = true;
-
     }
 
     private static void WaterCollision(Collider other)
@@ -78,17 +81,18 @@ public class PlayerCollision : MonoBehaviour
     {
         if (other.CompareTag("Enemy"))
         {
-            playerMoveScript.canMove = false;                                                     //
+            playerMoveScript.canMove = false; //
             other.GetComponent<NavMeshAgent>().enabled = false;
             StartCoroutine(EnemyNavmeshActivate(other.gameObject));
-            
-            playerRb.AddForce(-transform.forward * pushForce / 4, ForceMode.Impulse);            //
-            Invoke(nameof(CanMoveAfterForce), pushForce / 130);                             // Weakpoint Collision
 
-            var otherRb = other.GetComponent<Rigidbody>();                                     //
-            otherRb.AddForce(transform.forward * (pushForce * 1.75f), ForceMode.Impulse);     //    
+            playerRb.AddForce(-transform.forward * pushForce / 4, ForceMode.Impulse); //
+            Invoke(nameof(CanMoveAfterForce), pushForce / 130); // Weakpoint Collision
+
+            var otherRb = other.GetComponent<Rigidbody>(); //
+            otherRb.AddForce(transform.forward * (pushForce * 1.75f), ForceMode.Impulse); //    
         }
     }
+
     private void FoodCollision(Collider other)
     {
         if (other.CompareTag("Food"))
@@ -96,7 +100,8 @@ public class PlayerCollision : MonoBehaviour
             playerLevel++;
             Destroy(other.gameObject);
             StatsUp();
-            EventManager.OnCollectableTaken();          // If we take 1 object call event, SpawnManager spawn collectable once random position
+            EventManager
+                .OnCollectableTaken(); // If we take 1 object call event, SpawnManager spawn collectable once random position
             CollectableSpawner.Instance.foodList.Remove(other.gameObject);
         }
     }

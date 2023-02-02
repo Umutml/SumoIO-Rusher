@@ -3,15 +3,15 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     private static readonly int IsRunning = Animator.StringToHash("isRunning");
-    
+
     public float moveSpeed = 5;
-    [SerializeField]private float turnSpeed = 5;
+    [SerializeField] private float turnSpeed = 5;
     public bool canMove;
-    
+
     [SerializeField] private FloatingJoystick floatingJoystick;
-    
-    private Vector3 moveDirection;
     public Animator playerAnimator;
+
+    private Vector3 moveDirection;
     private Rigidbody playerRigidbody;
 
     private void Start()
@@ -25,6 +25,7 @@ public class PlayerMovement : MonoBehaviour
         Move();
         TurnCharacter();
     }
+
     private void OnEnable()
     {
         EventManager.OnGameStartedEvent += PlayRunAnim;
@@ -41,7 +42,8 @@ public class PlayerMovement : MonoBehaviour
     {
         if (floatingJoystick.Horizontal != 0)
         {
-            moveDirection = new Vector3(floatingJoystick.Horizontal, 0, floatingJoystick.Vertical); // TODO: Lerp turning speed
+            moveDirection =
+                new Vector3(floatingJoystick.Horizontal, 0, floatingJoystick.Vertical); // TODO: Lerp turning speed
             transform.forward = Vector3.Lerp(transform.forward, moveDirection, Time.deltaTime * turnSpeed);
         }
     }
@@ -61,8 +63,6 @@ public class PlayerMovement : MonoBehaviour
     private void GameOver()
     {
         canMove = false;
-        this.gameObject.SetActive(false);
+        gameObject.SetActive(false);
     }
-
-    
 }

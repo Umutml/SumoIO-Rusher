@@ -3,10 +3,9 @@ using UnityEngine;
 
 public class EventManager : MonoBehaviour
 {
-
     public static event Action OnGameStartedEvent;
     public static event Action OnCollectableTakenEvent;
-    public static event Action OnGameOverEvent; 
+    public static event Action OnGameOverEvent;
 
     public static void OnGameStarted()
     {
