@@ -3,10 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="6f0d34eb-2f3d-4b0d-b02b-2c8497920656" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.SumoIO-NoSurrenderCase/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SumoIO-NoSurrenderCase/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Food.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Food.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/EnemyAI.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/EnemyAI.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Enemy.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Enemy.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/MainScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/MainScene.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/CollectableSpawner.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/CollectableSpawner.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/PlayerCollision.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/PlayerCollision.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/TextMesh Pro/Resources/Fonts &amp; Materials/LiberationSans SDF.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/TextMesh Pro/Resources/Fonts &amp; Materials/LiberationSans SDF.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,6 +20,7 @@
     <setting file="file://$PROJECT_DIR$/../HitTheGym/Assets/GameManager.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../HitTheGym/Assets/PlayerMovement.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/EnemyAI.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/ExtensionMethods.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../Togo-BridgeRaceClone/Assets/Scripts/CamFollow.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../Togo-BridgeRaceClone/Assets/Scripts/EnemiesAI.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
@@ -80,6 +83,7 @@
       <workItem from="1675334689702" duration="9368000" />
       <workItem from="1675344699451" duration="7528000" />
       <workItem from="1675352334200" duration="100000" />
+      <workItem from="1675352501329" duration="7109000" />
     </task>
     <servers />
   </component>

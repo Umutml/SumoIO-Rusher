@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class CollectableSpawner : MonoBehaviour
@@ -47,6 +48,8 @@ public class CollectableSpawner : MonoBehaviour
     {
         var spawnPosition = new Vector3(Random.Range(-15, 16), 1.5f, Random.Range(-5.25f, 21.5f));
         var cloneSpawn = Instantiate(collectablePrefab, spawnPosition, Quaternion.identity, transform);
+        cloneSpawn.transform.localScale = Vector3.zero;
+        cloneSpawn.transform.DOScale(new Vector3(0.3f,0.3f,0.3f),1);
         foodList.Add(cloneSpawn);
     }
 }

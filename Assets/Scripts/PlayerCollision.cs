@@ -1,5 +1,8 @@
+using System.Collections;
+using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class PlayerCollision : MonoBehaviour
 {
@@ -48,11 +51,21 @@ public class PlayerCollision : MonoBehaviour
         if (collision.gameObject.CompareTag("Enemy"))
         {
             playerMoveScript.canMove = false;
-            playerRb.AddForce(-transform.forward * pushForce / 2, ForceMode.Impulse); // OurRigidbody Force
+            collision.gameObject.GetComponent<NavMeshAgent>().enabled = false;
+            StartCoroutine(EnemyNavmeshActivate(collision.gameObject));
+            
+            playerRb.AddForce(-transform.forward * pushForce / 4, ForceMode.Impulse); // OurRigidbody Force
             Invoke(nameof(CanMoveAfterForce), pushForce / 130);                  // Wait for pushComplete after player can move
+            
             var otherRb =collision.gameObject.GetComponent<Rigidbody>();            // This part could also be written using DoTween, which would likely have better control and performance.
             otherRb.AddForce(transform.forward * pushForce, ForceMode.Impulse);    //  I used physics for prototyping purposes.
         }
+    }
+
+    IEnumerator EnemyNavmeshActivate(GameObject enemy)
+    {
+        yield return new WaitForSeconds(1f);
+        enemy.GetComponent<NavMeshAgent>().enabled = true;
     }
 
     private static void WaterCollision(Collider other)
@@ -65,12 +78,15 @@ public class PlayerCollision : MonoBehaviour
     {
         if (other.CompareTag("Enemy"))
         {
-            playerMoveScript.canMove = false; //
-            playerRb.AddForce(-transform.forward * pushForce / 2, ForceMode.Impulse); //
-            Invoke(nameof(CanMoveAfterForce), pushForce / 130); // Weakpoint Collision
+            playerMoveScript.canMove = false;                                                     //
+            other.GetComponent<NavMeshAgent>().enabled = false;
+            StartCoroutine(EnemyNavmeshActivate(other.gameObject));
+            
+            playerRb.AddForce(-transform.forward * pushForce / 4, ForceMode.Impulse);            //
+            Invoke(nameof(CanMoveAfterForce), pushForce / 130);                             // Weakpoint Collision
 
-            var otherRb = other.GetComponent<Rigidbody>(); //
-            otherRb.AddForce(transform.forward * (pushForce * 1.75f), ForceMode.Impulse); //    
+            var otherRb = other.GetComponent<Rigidbody>();                                     //
+            otherRb.AddForce(transform.forward * (pushForce * 1.75f), ForceMode.Impulse);     //    
         }
     }
     private void FoodCollision(Collider other)
@@ -81,7 +97,7 @@ public class PlayerCollision : MonoBehaviour
             Debug.Log("Food Taken");
             Destroy(other.gameObject);
             StatsUp();
-            EventManager.OnCollectableTaken(); // If we take 1 object call event, SpawnManager spawn collectable once random position
+            EventManager.OnCollectableTaken();          // If we take 1 object call event, SpawnManager spawn collectable once random position
             CollectableSpawner.Instance.foodList.Remove(other.gameObject);
         }
     }
@@ -104,13 +120,13 @@ public class PlayerCollision : MonoBehaviour
     {
         transform.DOScale(CalculateScale(playerLevel), 1f);
         playerMoveScript.moveSpeed -= 0.15f;
-        pushForce += 7;
+        pushForce += 5;
         Debug.Log("Scale UP");
     }
 
     private Vector3 CalculateScale(int level)
     {
-        var playerScale = 2 + level * scaleMultiplier;
+        var playerScale = 1.5f + level * scaleMultiplier;
         playerScale = Mathf.Clamp(playerScale, 1f, 7f);
         var scale = Vector3.one * playerScale;
         return scale;
