@@ -10,15 +10,9 @@ public class CollectableSpawner : MonoBehaviour
     [SerializeField] private Transform collectableParent;
     public List<GameObject> foodList = new();
 
-    private void Start()
+    private void Awake()
     {
         Instance = this;
-        for (var i = 0; i < collectableParent.childCount; i++)
-        {
-            var obj = collectableParent.GetChild(i);
-            foodList.Add(obj.gameObject);
-        }
-
         //SpawnCollectables(50);
     }
 
@@ -49,7 +43,7 @@ public class CollectableSpawner : MonoBehaviour
         var spawnPosition = new Vector3(Random.Range(-15, 16), 1.5f, Random.Range(-5.25f, 21.5f));
         var cloneSpawn = Instantiate(collectablePrefab, spawnPosition, Quaternion.identity, transform);
         cloneSpawn.transform.localScale = Vector3.zero;
-        cloneSpawn.transform.DOScale(new Vector3(0.3f,0.3f,0.3f),1);
+        cloneSpawn.transform.DOScale(new Vector3(0.3f,0.3f,0.3f),0.25f);
         foodList.Add(cloneSpawn);
     }
 }

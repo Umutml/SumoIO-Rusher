@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.AI;
@@ -64,8 +63,9 @@ public class PlayerCollision : MonoBehaviour
 
     IEnumerator EnemyNavmeshActivate(GameObject enemy)
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(.2f);
         enemy.GetComponent<NavMeshAgent>().enabled = true;
+
     }
 
     private static void WaterCollision(Collider other)
@@ -94,7 +94,6 @@ public class PlayerCollision : MonoBehaviour
         if (other.CompareTag("Food"))
         {
             playerLevel++;
-            Debug.Log("Food Taken");
             Destroy(other.gameObject);
             StatsUp();
             EventManager.OnCollectableTaken();          // If we take 1 object call event, SpawnManager spawn collectable once random position
@@ -121,7 +120,6 @@ public class PlayerCollision : MonoBehaviour
         transform.DOScale(CalculateScale(playerLevel), 1f);
         playerMoveScript.moveSpeed -= 0.15f;
         pushForce += 5;
-        Debug.Log("Scale UP");
     }
 
     private Vector3 CalculateScale(int level)

@@ -20,8 +20,6 @@ public class EnemyAI : MonoBehaviour
     
     private static readonly int IsRunning = Animator.StringToHash("isRunning");
     private Vector3 targetTransform;
-    
-    
 
 
     // Start is called before the first frame update
@@ -31,14 +29,28 @@ public class EnemyAI : MonoBehaviour
         enemyAnimator = GetComponent<Animator>();
         enemyNavmesh = GetComponent<NavMeshAgent>();
         myRb = GetComponent<Rigidbody>();
+        ChooseTarget();
+        StartCoroutine(TargetLocatedFalse());
     }
 
     // Update is called once per frame
     void Update()
     {
         
-        //if (!targetLocated) ChooseTarget();
+        if (!targetLocated && enemyAnimator.enabled) ChooseTarget();
         //ChooseTarget();
+    }
+
+    IEnumerator TargetLocatedFalse()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(8);
+            if (enemyNavmesh.enabled)
+            {
+                targetLocated = false;
+            }
+        }
     }
 
     private void ChooseTarget()
@@ -57,18 +69,18 @@ public class EnemyAI : MonoBehaviour
             targetTransform = MyCollectables[0];
         }*/
 
-        //if (targetTransform == null) return;
        
-        var foods = CollectableSpawner.Instance.foodList;
-        var randomTarget = CollectableSpawner.Instance.foodList.Random();
-        targetTransform = randomTarget.transform.position;
-
-        if (targetTransform == null)
-        {
-            enemyNavmesh.SetDestination(targetTransform);
-        }
+        //var foods = CollectableSpawner.Instance.foodList;
+        //var randomTarget = CollectableSpawner.Instance.foodList[Random.Range(0,foods.Count)];
+        //targetTransform = randomTarget.transform.position;
         
-        enemyAnimator.SetBool(IsRunning, true);
+        var randomListTarget = CollectableSpawner.Instance.foodList[Random.Range(0, CollectableSpawner.Instance.foodList.Count)];
+        //Debug.Log(randomListTarget.name);
+        if (!enemyNavmesh.enabled) return;
+            
+            enemyNavmesh.SetDestination(randomListTarget.transform.position);
+            targetLocated = true;
+            enemyAnimator.SetBool(IsRunning, true);
 
     }
     
@@ -83,27 +95,27 @@ public class EnemyAI : MonoBehaviour
         if (other.CompareTag("Food"))
         {
             myLevel++;
-            Debug.Log("Food Taken");
             Destroy(other.gameObject);
-            //StatsUp();
+            StatsUp();
             EventManager.OnCollectableTaken();          // If we take 1 object call event, SpawnManager spawn collectable once random position
             CollectableSpawner.Instance.foodList.Remove(other.gameObject);
-            //targetLocated = false;
+            targetLocated = false;
         }
         
         if (other.CompareTag("Water"))
         {
             enemyNavmesh.enabled = false;
-            this.gameObject.SetActive(false);
+            GameObject o;
+            (o = this.gameObject).SetActive(false);
+            Destroy(o);
         }
     }
     
     private void StatsUp()
     {
         transform.DOScale(CalculateScale(myLevel), 1f);
-        enemyNavmesh.speed -= 0.15f;
+        enemyNavmesh.speed -= 0.05f;
         pushForce += 5;
-        Debug.Log("Scale UP");
     }
     
     private Vector3 CalculateScale(int level)

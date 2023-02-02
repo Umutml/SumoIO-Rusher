@@ -1721,8 +1721,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 10
+  turnSpeed: 5
   canMove: 0
   floatingJoystick: {fileID: 0}
+  playerAnimator: {fileID: 0}
 --- !u!114 &1636662690
 MonoBehaviour:
   m_ObjectHideFlags: 0
