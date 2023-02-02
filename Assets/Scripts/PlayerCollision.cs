@@ -1,4 +1,3 @@
-using System;
 using DG.Tweening;
 using UnityEngine;
 
@@ -9,6 +8,7 @@ public class PlayerCollision : MonoBehaviour
     [SerializeField] private float pushForce = 5;
     private PlayerMovement playerMoveScript;
     private Rigidbody playerRb;
+    private static readonly int IsRunning = Animator.StringToHash("isRunning");
 
     private void Start()
     {
@@ -19,23 +19,61 @@ public class PlayerCollision : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        EnemyCollision(collision);
+        GroundCheck(collision);
+    }
+    private void OnCollisionExit(Collision other)
+    {
+        GroundExitColl(other);
+    }
+    
+    private void OnTriggerEnter(Collider other)
+    {
+        FoodCollision(other);
+        EnemyTrigger(other);
+        WaterCollision(other);
+    }
+
+    private void GroundCheck(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground") && GameManager.Instance.gameStarted)
+        {
+            playerMoveScript.canMove = true;
+            playerMoveScript.playerAnimator.SetBool(IsRunning, true);
+        }
+    }
+
+    private void EnemyCollision(Collision collision)
+    {
         if (collision.gameObject.CompareTag("Enemy"))
         {
             playerMoveScript.canMove = false;
             playerRb.AddForce(-transform.forward * pushForce / 2, ForceMode.Impulse); // OurRigidbody Force
-            Invoke(nameof(CanMoveAfterForce), pushForce / 100);                   // Wait for pushComplete after player can move
-            
-            var otherRb = collision.gameObject.GetComponent<Rigidbody>();             // This part could also be written using DoTween, which would likely have better control and performance.
-            otherRb.AddForce(transform.forward * pushForce, ForceMode.Impulse);       //  I used physics for prototyping purposes.
-        }
-        if (collision.gameObject.CompareTag("Ground") && GameManager.Instance.gameStarted)
-        {
-            playerMoveScript.canMove = true;
-            playerMoveScript.playerAnimator.SetBool("isRunning",true);
+            Invoke(nameof(CanMoveAfterForce), pushForce / 130);                  // Wait for pushComplete after player can move
+            var otherRb =collision.gameObject.GetComponent<Rigidbody>();            // This part could also be written using DoTween, which would likely have better control and performance.
+            otherRb.AddForce(transform.forward * pushForce, ForceMode.Impulse);    //  I used physics for prototyping purposes.
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private static void WaterCollision(Collider other)
+    {
+        if (other.CompareTag("Water"))
+            EventManager.OnGameOver();
+    }
+
+    private void EnemyTrigger(Collider other)
+    {
+        if (other.CompareTag("Enemy"))
+        {
+            playerMoveScript.canMove = false; //
+            playerRb.AddForce(-transform.forward * pushForce / 2, ForceMode.Impulse); //
+            Invoke(nameof(CanMoveAfterForce), pushForce / 130); // Weakpoint Collision
+
+            var otherRb = other.GetComponent<Rigidbody>(); //
+            otherRb.AddForce(transform.forward * (pushForce * 1.75f), ForceMode.Impulse); //    
+        }
+    }
+    private void FoodCollision(Collider other)
     {
         if (other.CompareTag("Food"))
         {
@@ -46,28 +84,14 @@ public class PlayerCollision : MonoBehaviour
             EventManager.OnCollectableTaken(); // If we take 1 object call event, SpawnManager spawn collectable once random position
             CollectableSpawner.Instance.foodList.Remove(other.gameObject);
         }
-        if (other.CompareTag("Enemy"))
-        {
-            playerMoveScript.canMove = false;                                               //
-            playerRb.AddForce(-transform.forward * pushForce / 2, ForceMode.Impulse);       //
-            Invoke(nameof(CanMoveAfterForce), pushForce / 100);                         // Weakpoint Collision
-
-            var otherRb = other.GetComponent<Rigidbody>();                                  //
-            otherRb.AddForce(transform.forward * (pushForce * 1.5f), ForceMode.Impulse);    //    
-        }
-
-        if (other.CompareTag("Water"))
-        {
-            EventManager.OnGameOver();
-        }
     }
 
-    private void OnCollisionExit(Collision other)
+    private void GroundExitColl(Collision other)
     {
         if (other.gameObject.CompareTag("Ground"))
         {
             playerMoveScript.canMove = false;
-            playerMoveScript.playerAnimator.SetBool("isRunning",false);
+            playerMoveScript.playerAnimator.SetBool(IsRunning, false);
         }
     }
 
@@ -79,8 +103,8 @@ public class PlayerCollision : MonoBehaviour
     private void StatsUp()
     {
         transform.DOScale(CalculateScale(playerLevel), 1f);
-        playerMoveScript.moveSpeed -= 0.20f;
-        pushForce += 5;
+        playerMoveScript.moveSpeed -= 0.15f;
+        pushForce += 7;
         Debug.Log("Scale UP");
     }
 
