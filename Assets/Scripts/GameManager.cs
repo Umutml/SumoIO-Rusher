@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -19,15 +20,29 @@ public class GameManager : MonoBehaviour
     private void OnEnable()
     {
         EventManager.OnGameStartedEvent += StartGame;
+        EventManager.OnGameOverEvent += GameOver;
+        
     }
 
     private void OnDisable()
     {
         EventManager.OnGameStartedEvent -= StartGame;
+        EventManager.OnGameOverEvent -= GameOver;
     }
 
     private void StartGame()
     {
         gameStarted = true;
+    }
+
+    private void GameOver()
+    {
+        gameStarted = false;
+        Invoke(nameof(RestartGame),2f);
+    }
+
+    private void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

@@ -31,6 +31,7 @@ public class PlayerCollision : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground") && GameManager.Instance.gameStarted)
         {
             playerMoveScript.canMove = true;
+            playerMoveScript.playerAnimator.SetBool("isRunning",true);
         }
     }
 
@@ -43,6 +44,7 @@ public class PlayerCollision : MonoBehaviour
             Destroy(other.gameObject);
             StatsUp();
             EventManager.OnCollectableTaken(); // If we take 1 object call event, SpawnManager spawn collectable once random position
+            CollectableSpawner.Instance.foodList.Remove(other.gameObject);
         }
         if (other.CompareTag("Enemy"))
         {
@@ -53,6 +55,11 @@ public class PlayerCollision : MonoBehaviour
             var otherRb = other.GetComponent<Rigidbody>();                                  //
             otherRb.AddForce(transform.forward * (pushForce * 1.5f), ForceMode.Impulse);    //    
         }
+
+        if (other.CompareTag("Water"))
+        {
+            EventManager.OnGameOver();
+        }
     }
 
     private void OnCollisionExit(Collision other)
@@ -60,6 +67,7 @@ public class PlayerCollision : MonoBehaviour
         if (other.gameObject.CompareTag("Ground"))
         {
             playerMoveScript.canMove = false;
+            playerMoveScript.playerAnimator.SetBool("isRunning",false);
         }
     }
 
@@ -71,7 +79,7 @@ public class PlayerCollision : MonoBehaviour
     private void StatsUp()
     {
         transform.DOScale(CalculateScale(playerLevel), 1f);
-        playerMoveScript.moveSpeed -= 0.10f;
+        playerMoveScript.moveSpeed -= 0.20f;
         pushForce += 5;
         Debug.Log("Scale UP");
     }
@@ -79,7 +87,7 @@ public class PlayerCollision : MonoBehaviour
     private Vector3 CalculateScale(int level)
     {
         var playerScale = 2 + level * scaleMultiplier;
-        playerScale = Mathf.Clamp(playerScale, 2f, 5f);
+        playerScale = Mathf.Clamp(playerScale, 1f, 7f);
         var scale = Vector3.one * playerScale;
         return scale;
     }
