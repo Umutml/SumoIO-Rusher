@@ -1,33 +1,19 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 public class PlayerMovement : MonoBehaviour
 {
-
-    [SerializeField] private float moveSpeed = 5;
+    private static readonly int IsRunning = Animator.StringToHash("isRunning");
     
-    private Animator playerAnimator;
-    private Rigidbody playerRigidbody;
-    private Vector3 moveDirection;
-    private bool canMove;
+    public float moveSpeed = 5;
+    private float turnSpeed = 5;
+    public bool canMove;
     
     [SerializeField] private FloatingJoystick floatingJoystick;
-   
     
-    private void OnEnable()
-    {
-        EventManager.OnGameStartedEvent += PlayRunAnim;
-
-    }
-
-    private void OnDisable()
-    {
-        EventManager.OnGameStartedEvent -= PlayRunAnim;
-    }
-
+    private Vector3 moveDirection;
+    private Animator playerAnimator;
+    private Rigidbody playerRigidbody;
 
     private void Start()
     {
@@ -38,28 +24,35 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         Move();
+        TurnCharacter();
+    }
+    private void OnEnable()
+    {
+        EventManager.OnGameStartedEvent += PlayRunAnim;
+    }
+
+    private void OnDisable()
+    {
+        EventManager.OnGameStartedEvent -= PlayRunAnim;
+    }
+
+    private void TurnCharacter()
+    {
+        if (floatingJoystick.Horizontal != 0)
+        {
+            moveDirection = new Vector3(floatingJoystick.Horizontal, 0, floatingJoystick.Vertical); // TODO: Lerp turning speed
+            transform.forward = Vector3.Lerp(transform.forward, moveDirection, Time.deltaTime * turnSpeed);
+        }
     }
 
     private void Move()
     {
-       if (floatingJoystick.Horizontal != 0)
-       {
-           moveDirection = new Vector3(floatingJoystick.Horizontal, 0, floatingJoystick.Vertical);
-           transform.forward = moveDirection;
-       }
-
-       if (canMove)
-       {
-           playerRigidbody.velocity = transform.forward * moveSpeed;
-       }
+        if (canMove) playerRigidbody.velocity = transform.forward * moveSpeed;
     }
 
     private void PlayRunAnim()
     {
-        playerAnimator.SetBool("isRunning",true);
+        playerAnimator.SetBool(IsRunning, true);
         canMove = true;
     }
-    
-
-    
 }
