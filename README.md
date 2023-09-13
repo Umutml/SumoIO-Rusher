@@ -1,4 +1,4 @@
-# SumoIO-NoSurrenderCase
+# SumoIO
 
 Youtube Link - https://youtube.com/shorts/lH8CeaDmJk0
 
